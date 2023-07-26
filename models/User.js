@@ -32,11 +32,9 @@ const userSchema = new mongoose.Schema(
     },
     dateOfBirth: {
       type: String,
-      required: true,
     },
     country: {
       type: String,
-      required: true,
     },
     wishlist: {
       type: Array,
@@ -54,6 +52,6 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("user", userSchema);
+const User = mongoose.model("user", userSchema); // collection created
 
 export default User;

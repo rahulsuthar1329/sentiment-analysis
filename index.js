@@ -3,7 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 
-const port = process.env.PORT || 3003;
+// const port = process.env.PORT || 3003;
+const port = 3003;
 const app = express();
 
 // Middlewares
@@ -12,11 +13,7 @@ app.use(express.urlencoded());
 app.use(cors());
 
 // Routes
-app.use("/auth", userRoutes);
-
-app.get("/", (req, res) => {
-  res.json("Welcome to GenieCart!");
-});
+// app.use("/auth", userRoutes);
 
 app.listen(port, (err) => {
   if (err) console.log(err);
