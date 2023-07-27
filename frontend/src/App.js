@@ -7,12 +7,13 @@ import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
 import Profile from "./components/Profile/Profile";
 import NotFound from "./components/NotFound/NotFound";
+import LandingPage from "./components/LandingPage/LandingPage";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route index element={<Homepage />} />
+        <Route index element={<LandingPage />} />
         <Route path="/" element={<Homepage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
