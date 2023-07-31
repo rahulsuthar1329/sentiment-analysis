@@ -16,11 +16,7 @@
     text-align: justify;
     text-justify: inter-word;
 }
-/* 
+
 .spacetop{
     margin-top: 5rem;
-} */
-
-.flexalign{
-    align-self:flex-end;
 }
