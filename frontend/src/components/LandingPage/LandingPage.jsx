@@ -5,41 +5,48 @@ import bagSmall from "./images/bag.png";
 import Navbar from "../Navbar/Navbar";
 
 const LandingPage = () => {
-    return (
-        <>
-            <div className="p-5">
-                <Navbar />
-                <div className="container">
-                    <div className="row justify-content-center align-items-center">
-                        <div className="col-md-6">
-                            <img
-                                src={window.innerWidth < 768 ? bagSmall : bagLarge}
-                                className="img-fluid"
-                                alt="shopping bag"
-                            />
-                        </div>
-                        <div className={`col-md-6 ${styles.spacetop}`}>
-                            <h1>Unleash The</h1>
-                            <h1 className={`text-teal ${styles.textteal}`}>Treasure of GenieCart!</h1>
-                            <p className="mt-5 mr-2">
-                                <p className={styles.content}>
-                                    "Rub the lamp of GenieCart, and let your shopping wishes take flight! From trendy fashion finds to cutting-edge gadgets, We are here to grant you the ultimate shopping experience. So, go ahead and explore the magic of GenieCart - Your dreams, our command!"
-                                </p>
-                            </p>
-                            <div className="my-3">
-                                <button className="btn btn-success m-3 my-sm-0" type="submit">
-                                    Get Started!
-                                </button>
-                                <button className="btn btn-outline-success my-sm-0" type="submit">
-                                    Learn More
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  return (
+    <div className="h-100">
+      <Navbar />
+      <div className="container-fluid container-lg h-100 pt-4 pt-md-0">
+        <div
+          className={`row justify-content-center align-items-center h-100 flex-wrap-reverse flex-lg-wrap  ${styles.custom_flex}`}
+        >
+          <div
+            className={`col-md-6 d-flex justify-content-between gap-1 gap-lg-3 px-4 px-lg-1 flex-column `}
+          >
+            <div>
+              <h1>Unleash The</h1>
+              <h1 style={{ color: "rgb(82, 153, 128)" }}>
+                Treasure of GenieCart!
+              </h1>
             </div>
-        </>
-    );
+            <p className={styles.content}>
+              "Rub the lamp of GenieCart, and let your shopping wishes take
+              flight! From trendy fashion finds to cutting-edge gadgets, We are
+              here to grant you the ultimate shopping experience. So, go ahead
+              and explore the magic of GenieCart - Your dreams, our command!"
+            </p>
+            <div className="d-flex gap-3">
+              <button className={`${styles.getStarted}`} type="submit">
+                Get Started!
+              </button>
+              <button className={`${styles.readMore}`} type="submit">
+                Learn More
+              </button>
+            </div>
+          </div>
+          <div className="col-md-6 d-flex justify-content-center align-items-center">
+            <img
+              src={window.innerWidth < 768 ? bagSmall : bagLarge}
+              className={`${styles.vector} img-fluid `}
+              alt="shopping bag"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default LandingPage;

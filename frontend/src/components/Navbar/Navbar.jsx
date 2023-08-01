@@ -1,21 +1,29 @@
 import React from "react";
 import logo from "./images/GenieCart_Teal.png";
+import styles from "./navbar.module.css";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   return (
-    <nav className={`navbar navbar-light bg-light`}>
-      <a className="navbar-brand" href="#">
-        <img src={logo} width="187" height="50" className="d-inline-block align-top" alt="GenieCart" />
-      </a>
-      <ul className={`navbar-nav ms-auto d-flex`}>
-        <li style={{display:"inline-block"}}>
-          <button className={`btn btn-success mx-3 my-sm-0 `} type="submit">Login</button>
-        </li>
-        <li style={{display:"inline-block"}}>
-          <button className={`btn btn-outline-success my-sm-0 `} type="submit">Register</button>
-        </li>
-      </ul>
-    </nav>
+    <div className="container-lg container-fluid py-2 fixed-top">
+      <nav className={`navbar`}>
+        <div
+          className={`${styles.logo} navbar-brand`}
+          onClick={() => navigate("/home")}
+        >
+          <img src={logo} height="30px" alt="GenieCart" />
+        </div>
+        <div className="d-flex justify-content-center gap-3">
+          <button className={`${styles.login}`} type="submit">
+            Login
+          </button>
+          <button className={`${styles.register}`} type="submit">
+            Register
+          </button>
+        </div>
+      </nav>
+    </div>
   );
 };
 
