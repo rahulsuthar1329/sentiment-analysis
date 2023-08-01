@@ -3,8 +3,10 @@ import styles from "./LandingPage.module.css";
 import bagLarge from "./images/vecteezy_illustration-isometric-concept-safety-of-online-shopping-in_5638074.jpg";
 import bagSmall from "./images/bag.png";
 import Navbar from "../Navbar/Navbar";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   return (
     <div className="h-100">
       <Navbar />
@@ -28,7 +30,11 @@ const LandingPage = () => {
               and explore the magic of GenieCart - Your dreams, our command!"
             </p>
             <div className="d-flex gap-3">
-              <button className={`${styles.getStarted}`} type="submit">
+              <button
+                className={`${styles.getStarted}`}
+                type="submit"
+                onClick={() => navigate("/login")}
+              >
                 Get Started!
               </button>
               <button className={`${styles.readMore}`} type="submit">
