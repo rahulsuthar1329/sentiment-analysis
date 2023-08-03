@@ -4,11 +4,12 @@ const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
-      min: 3,
       required: true,
+      min: 3,
     },
     lastName: {
       type: String,
+      required: true,
       min: 2,
     },
     username: {
@@ -27,14 +28,21 @@ const userSchema = new mongoose.Schema(
       required: true,
       min: 8,
     },
+    mobile: {
+      type: String,
+      default: "",
+    },
     profilePicture: {
       type: String,
+      default: "",
     },
     dateOfBirth: {
       type: String,
+      default: "",
     },
     country: {
       type: String,
+      default: "",
     },
     wishlist: {
       type: Array,
@@ -47,6 +55,7 @@ const userSchema = new mongoose.Schema(
     },
     savedAddress: {
       type: String,
+      default: "",
     },
   },
   { timestamps: true }
