@@ -24,10 +24,10 @@ const LandingPage = () => {
               </h1>
             </div>
             <p className={styles.content}>
-              "Rub the lamp of GenieCart, and let your shopping wishes take
+              Rub the lamp of GenieCart, and let your shopping wishes take
               flight! From trendy fashion finds to cutting-edge gadgets, We are
               here to grant you the ultimate shopping experience. So, go ahead
-              and explore the magic of GenieCart - Your dreams, our command!"
+              and explore the magic of GenieCart - Your dreams, our command!
             </p>
             <div className="d-flex gap-3">
               <button
@@ -35,7 +35,7 @@ const LandingPage = () => {
                 type="submit"
                 onClick={() => navigate("/login")}
               >
-                Get Started!
+                Get Started !
               </button>
               <button className={`${styles.readMore}`} type="submit">
                 Learn More

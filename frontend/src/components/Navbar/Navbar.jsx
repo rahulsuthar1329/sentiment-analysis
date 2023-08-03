@@ -15,10 +15,18 @@ const Navbar = () => {
           <img src={logo} height="30px" alt="GenieCart" />
         </div>
         <div className="d-flex justify-content-center gap-3">
-          <button className={`${styles.login}`} type="submit">
+          <button
+            className={`${styles.login}`}
+            type="submit"
+            onClick={() => navigate("/login")}
+          >
             Login
           </button>
-          <button className={`${styles.register}`} type="submit">
+          <button
+            className={`${styles.register}`}
+            type="submit"
+            onClick={() => navigate("/register")}
+          >
             Register
           </button>
         </div>

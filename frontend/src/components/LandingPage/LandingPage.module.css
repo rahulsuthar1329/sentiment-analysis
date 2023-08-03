@@ -21,6 +21,9 @@
   color: white;
   box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.5);
 }
+.getStarted:active {
+  transform: scale(1.1);
+}
 .getStarted:hover {
   background-color: #2dbe95;
   outline: 1px solid #2dbe95;
@@ -33,6 +36,9 @@
   padding: 8px 20px;
   border-radius: 4px;
   background-color: white;
+}
+.readMore:active {
+  transform: scale(1.1);
 }
 .readMore:hover {
   color: white;
@@ -63,6 +69,9 @@
 .vector {
   animation: move 1.5s ease-in-out 0s infinite;
 }
+.vector:hover {
+  animation-play-state: paused;
+}
 
 @media screen and (max-width: 768px) {
   .custom_flex {
@@ -76,6 +85,10 @@
   .custom_flex img {
     width: 100%;
     animation: hovermove 1.5s ease-in-out 0s infinite;
+  }
+  .custom_flex img:hover {
+    width: 100%;
+    animation-play-state: paused;
   }
   .custom_flex p {
     font-size: 13px;
