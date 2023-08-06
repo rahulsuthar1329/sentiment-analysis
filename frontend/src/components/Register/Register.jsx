@@ -17,9 +17,9 @@ function Register() {
         className="Register d-flex flex-column w-50 gap-5"
         onSubmit={handleSubmit}
       >
-        <input type="text" onChange={(e) => setName(e.target.value)} />
-        <input type="email" onChange={(e) => setEmail(e.target.value)} />
-        <input type="password" onChange={(e) => setPassword(e.target.value)} />
+        <input type="text" placeholder="Name" onChange={(e) => setName(e.target.value)} />
+        <input type="email"  placeholder = "Email" onChange={(e) => setEmail(e.target.value)} />
+        <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
         <input type="submit" className="btn btn-primary" />
       </form>
     </>
