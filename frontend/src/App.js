@@ -8,16 +8,18 @@ import Register from "./components/Register/Register";
 import Profile from "./components/Profile/Profile";
 import NotFound from "./components/NotFound/NotFound";
 import LandingPage from "./components/LandingPage/LandingPage";
+import VerifyOTP from "./components/VerifyOTP/VerifyOTP";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route index element={<LandingPage/>} />
-        <Route path="/" element={<LandingPage/>} />
+        <Route index element={<LandingPage />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

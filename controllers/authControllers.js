@@ -10,7 +10,7 @@ export const login = async (req, res) => {
     "-----------------------------Login API Called-------------------------------"
   );
   const { uniqueId, password } = req.body;
-  let token;
+
   try {
     connect();
 
@@ -19,11 +19,17 @@ export const login = async (req, res) => {
     });
 
     if (!isExist.length)
-      return res.status(403).json({ message: "User not registered!" });
+      return res.status(403).json({ message: "User not registered!" }); // this message should be changed to "Invalid Username or Password!" for security reasons
 
     const isPasswordMatch = await bcrypt.compare(password, isExist[0].password);
 
-    if (isPasswordMatch) token = await generateAccessToken(uniqueId);
+    if (!isPasswordMatch)
+      res.status(401).json({ message: "Invalid Username or Password!" });
+    const token = await generateAccessToken(uniqueId);
+
+    isExist[0].password = undefined;
+
+    console.log("User:", isExist[0]);
 
     return res
       .status(200)
@@ -77,8 +83,10 @@ export const register = async (req, res) => {
       password: encryptedPassword,
       dateOfBirth,
     });
-
-    return res.status(201).json({ message: "User Registered Successfully..." });
+    const otp = generateOTP();
+    return res
+      .status(201)
+      .json({ message: "User Registered Successfully...", otp });
   } catch (error) {
     console.log("Register Error: ", error);
     return res.status(500).json(error);
