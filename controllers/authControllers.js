@@ -1,7 +1,9 @@
-import User from "./../models/User.js";
-import { connect } from "./../config/db.js";
+import User from "../models/User.js";
+import { connect } from "../config/db.js";
 import bcrypt from "bcrypt";
-import { generateAccessToken } from "./../utils/auth.js";
+import { generateAccessToken } from "../utils/auth.js";
+import { generateOTP } from "../utils/otp.js";
+import { sendOtpToMail } from "../utils/mail.js";
 
 export const login = async (req, res) => {
   console.log(
@@ -80,5 +82,24 @@ export const register = async (req, res) => {
   } catch (error) {
     console.log("Register Error: ", error);
     return res.status(500).json(error);
+  }
+};
+
+export const resendOTP = (req, res) => {
+  console.log(
+    "-----------------------------resendOTP API Called-------------------------------"
+  );
+  const { email } = req.body;
+  const otp = generateOTP();
+
+  try {
+    console.log("otp:", otp);
+    sendOtpToMail(email, otp);
+    return res
+      .status(200)
+      .json({ message: "OTP sent to your email successfully!", otp });
+  } catch (error) {
+    console.log("Resend OTP Error : ", error);
+    res.status(500).json({ message: "Error while resending otp!" });
   }
 };

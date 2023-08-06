@@ -30,6 +30,7 @@ const userSchema = new mongoose.Schema(
     },
     mobile: {
       type: String,
+      required: true,
       default: "",
     },
     profilePicture: {
@@ -38,6 +39,7 @@ const userSchema = new mongoose.Schema(
     },
     dateOfBirth: {
       type: String,
+      required: true,
       default: "",
     },
     country: {
