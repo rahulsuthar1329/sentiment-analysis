@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  min-height: 100%;
   width: 100%;
 }
 
@@ -43,19 +43,19 @@
   margin-bottom: 20px;
 }
 
-h3 {
+.heading {
   text-align: center;
   font-size: 20px;
   font-weight: 500;
 }
 
-p {
+.rightSide p {
   font-size: 13px;
   text-align: center;
   margin: 0;
 }
 
-span,
+.rightSide span,
 .goback {
   color: #349b7e;
   font-weight: 500;
@@ -63,7 +63,7 @@ span,
   text-decoration: underline;
 }
 
-span:hover,
+.rightSide span:hover,
 .goback:hover {
   color: #2dbe95;
 }

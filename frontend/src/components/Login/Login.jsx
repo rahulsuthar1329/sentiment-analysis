@@ -1,64 +1,143 @@
 import React, { useState } from "react";
-import genie from "./images/Left_Image.png";
 import styles from "./Login.module.css";
+import vector from "./images/Left_Image_Cropped.png";
 import google from "./images/Google_Logo.png";
+import checkbox_unselected from "./images/Checkbox_Unselected.png";
+import checkbox_selected from "./images/Checkbox_Selected.png";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import toastOptions from "../../utils/toastOptions";
+
+import axios from "axios";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [uniqueId, setUniqueId] = useState("");
   const [password, setPassword] = useState("");
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password", password);
+  const [isRemember, setIsRemember] = useState(false);
+  const navigate = useNavigate();
+
+  const handleChange = (setState) => (event) => {
+    setState(event.target.value);
   };
+
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      if (uniqueId.trim() && password.trim()) {
+        const response = await axios.post("http://localhost:5001/auth/login", {
+          uniqueId,
+          password,
+        });
+        if (response.status === 200) {
+          setLoading(false);
+          toast.success("Login Successfully!");
+        }
+        navigate("/home");
+      } else {
+        if (!uniqueId.trim()) {
+          setLoading(false);
+          toast.error("Please enter username or email.", toastOptions);
+          return;
+        }
+        if (!password.trim()) {
+          setLoading(false);
+          toast.error("Please enter password.", toastOptions);
+          return;
+        }
+      }
+    } catch (error) {
+      if (error.response.status === 403) {
+        toast.error(error.response.data.message, toastOptions);
+        setLoading(false);
+        return;
+      }
+      toast.error("Internal Server Error!", toastOptions);
+      setLoading(false);
+      console.log("Error: ", error);
+    }
+  };
+
   return (
-    <div onSubmit={handleSubmit}>
-      <div className={styles.inner}>
-        <img src={genie} alt="" height={"90%"} width={"50%"} />
-        <div className={styles.loginForm}>
-          <form action="" className={styles.form}>
+    <div className={styles.login}>
+      <div className={styles.mycont}>
+        <div className={styles.leftSide}>
+          <img
+            src={vector}
+            alt=""
+            width="100%"
+            height="100%"
+            className={styles.vector}
+          />
+        </div>
+        <div className={styles.rightSide}>
+          <form className={styles.content} onSubmit={handleOnSubmit}>
+            <h2 className={styles.heading}>Login</h2>
+
             <input
-              type="email"
-              placeholder="Email"
-              className={styles.email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              placeholder="Email or Username"
+              value={uniqueId}
+              name="uniqueId"
+              onChange={handleChange(setUniqueId)}
+              className={styles.input}
             />
+
             <input
               type="password"
               placeholder="Password"
-              className={styles.password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              name="password"
+              onChange={handleChange(setPassword)}
+              className={styles.input}
             />
-            <div className={styles.innerForm}>
-              <label htmlFor="" className={styles.rememberme}>
-                <input type="checkbox" />
-                Remember Me
-              </label>
-              <label htmlFor="" className={styles.forgotpass}>
-                <a href="">Forgot Password</a>
-              </label>
-            </div>
-            <input
-              type="submit"
-              className={styles.googleBtn}
-              id="userSubmitButton"
-            ></input>
-            <label htmlFor="">
-              Don't have an Account ? <a href="">Register Here</a>
-            </label>
 
-            <div>
-              <button className={styles.googleBtn}>
-                <img src={google} height="20px" width="20px" alt="" />{" "}
-                <label htmlFor="" className="styles.googleBtn">
-                  Login With Google
-                </label>
-              </button>
-              {/* <input type="submit"  className=""> <img src={google}  height= "20px" width = "20px" alt="" /><label>Login With Google</label></input> */}
+            <div
+              className={`d-flex justify-content-between align-items-center w-75 px-2 ${styles.forgot}`}
+            >
+              <p
+                onClick={() => setIsRemember(!isRemember)}
+                style={{
+                  cursor: "pointer",
+                  display: "flex",
+                  gap: "10px",
+                  alignItems: "center",
+                }}
+              >
+                <img
+                  src={isRemember ? checkbox_selected : checkbox_unselected}
+                  alt="checkbox"
+                  height={"15px"}
+                />{" "}
+                <span>Remember Me</span>
+              </p>
+              <p>
+                <span onClick={() => navigate("/forgot")}>
+                  Forgot Password?
+                </span>
+              </p>
             </div>
+
+            <button className={styles.submit}>
+              {loading ? "..." : "Submit"}
+            </button>
+            <p>
+              Don't have an Account ?{" "}
+              <span onClick={() => navigate("/register")}>Register here.</span>
+            </p>
           </form>
+          <button
+            className={`${styles.submit} d-flex justify-content-between align-items-center`}
+          >
+            <img src={google} alt="google icon" height={"23px"} />{" "}
+            <p>Login with Google</p>
+            <div></div>
+          </button>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

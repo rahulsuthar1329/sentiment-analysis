@@ -32,7 +32,7 @@ const VerifyOTP = () => {
         <div className={styles.rightSide}>
           <img src={logo} alt="" height="35px" className={styles.logo} />
           <div className={styles.content}>
-            <h3>Verify your email</h3>
+            <h3 className={styles.heading}>Verify your email</h3>
             <p>Please Enter the One Time Password (OTP) sent to your email</p>
             <div className={styles.code}>
               <input

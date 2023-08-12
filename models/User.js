@@ -28,6 +28,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       min: 8,
     },
+    gender: {
+      type: String,
+      required: true,
+      enum: ["male", "female", "other"],
+    },
     mobile: {
       type: String,
       required: true,

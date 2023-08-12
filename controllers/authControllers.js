@@ -19,7 +19,7 @@ export const login = async (req, res) => {
     });
 
     if (!isExist.length)
-      return res.status(403).json({ message: "User not registered!" }); // this message should be changed to "Invalid Username or Password!" for security reasons
+      return res.status(403).json({ message: "Invalid Credentials!" }); // this message should be changed to "Invalid Username or Password!" for security reasons
 
     const isPasswordMatch = await bcrypt.compare(password, isExist[0].password);
 
@@ -44,8 +44,16 @@ export const register = async (req, res) => {
   console.log(
     "-----------------------------Register API Called-------------------------------"
   );
-  const { firstName, lastName, username, email, password, dateOfBirth } =
-    req.body;
+  const {
+    firstName,
+    lastName,
+    username,
+    email,
+    password,
+    dateOfBirth,
+    gender,
+    mobile,
+  } = req.body;
 
   try {
     await connect();
@@ -54,9 +62,16 @@ export const register = async (req, res) => {
       $or: [{ username }, { email }],
     });
 
+    console.log(isExist[0]);
+
     if (isExist.length) {
       // check what field already exist email or username or both
-      if (isExist.length > 1)
+      if (
+        isExist.length > 1 ||
+        (isExist.length === 1 &&
+          isExist[0].username === username &&
+          isExist[0].email === email)
+      )
         return res
           .status(403)
           .json({ message: "Email and Username already exist!" });
@@ -82,8 +97,11 @@ export const register = async (req, res) => {
       email,
       password: encryptedPassword,
       dateOfBirth,
+      mobile,
+      gender,
     });
     const otp = generateOTP();
+    sendOtpToMail(email, otp);
     return res
       .status(201)
       .json({ message: "User Registered Successfully...", otp });
