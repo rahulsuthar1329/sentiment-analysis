@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import styles from "./VerifyOTP.module.css";
 import vector from "./img/vector.png";
 import logo from "./img/GenieCart_Teal.png";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useRef } from "react";
 
 const VerifyOTP = () => {
   const [otp, setOtp] = useState({
@@ -14,8 +15,17 @@ const VerifyOTP = () => {
     inp6: "",
   });
   const [seconds, setSeconds] = useState(0);
+  const ref = useRef();
+  const navigate = useNavigate();
 
   const location = useLocation();
+
+  const handleOnClick = (e) => {
+    e.preventDefault();
+    const combinedOTP =
+      otp.inp1 + otp.inp2 + otp.inp3 + otp.inp4 + otp.inp5 + otp.inp6;
+    if (combinedOTP === location.state.otp) return navigate("/home");
+  };
 
   return (
     <div className={styles.verify}>
@@ -95,9 +105,13 @@ const VerifyOTP = () => {
                 justifyContent: "center",
               }}
             >
-              <button className={styles.submit}>Verify</button>
+              <button className={styles.submit} onClick={handleOnClick}>
+                Verify
+              </button>
             </div>
-            <p className={styles.goback}>Change your Credentials</p>
+            <p className={styles.goback} onClick={() => navigate(-1)}>
+              Change your Credentials
+            </p>
           </div>
         </div>
       </div>

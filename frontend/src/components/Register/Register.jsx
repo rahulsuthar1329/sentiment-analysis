@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import styles from "./Register.module.css";
 import vector from "./images/Left_Image_Cropped.png";
 import google from "./images/Google_Logo.png";
@@ -9,6 +9,7 @@ import unSelectedRadio from "./images/unSelectedRadioOutlined.png";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import toastOptions from "../../utils/toastOptions";
+import axios from "axios";
 import {
   isEmailValid,
   isPasswordValid,
@@ -16,9 +17,7 @@ import {
   isUsernameValid,
 } from "../../utils/validation";
 
-import axios from "axios";
-
-const Login = () => {
+const Register = () => {
   const [loading, setLoading] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -296,4 +295,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
