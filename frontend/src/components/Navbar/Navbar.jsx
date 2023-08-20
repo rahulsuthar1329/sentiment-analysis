@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Navbar = () => {
   const navigate = useNavigate();
   return (
-    <div className="container-lg container-fluid py-2 fixed-top">
+    <div className="container-lg container-fluid py-2 fixed-top bg-white">
       <nav className={`navbar`}>
         <div
           className={`${styles.logo} navbar-brand`}

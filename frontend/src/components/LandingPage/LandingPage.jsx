@@ -3,6 +3,7 @@ import styles from "./LandingPage.module.css";
 import bagLarge from "./images/vecteezy_illustration-isometric-concept-safety-of-online-shopping-in_5638074.jpg";
 import bagSmall from "./images/bag.png";
 import Navbar from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
 import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
@@ -50,6 +51,7 @@ const LandingPage = () => {
             />
           </div>
         </div>
+      <Footer />
       </div>
     </div>
   );
