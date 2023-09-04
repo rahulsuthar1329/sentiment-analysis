@@ -30,7 +30,7 @@
 }
 .readMore {
   font-size: 13px;
-  outline: 1.5px solid #349b7e;
+  outline: 1px solid #349b7e;
   border: none;
   color: #349b7e;
   padding: 8px 20px;
@@ -43,7 +43,6 @@
 .readMore:hover {
   color: white;
   background-color: #349b7e;
-  outline: 1.5px solid #349b7e;
   box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.5);
 }
 

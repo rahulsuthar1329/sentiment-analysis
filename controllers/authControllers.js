@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import Verification from "./../models/Verify";
 import { connect } from "../config/db.js";
 import bcrypt from "bcrypt";
 import { generateAccessToken } from "../utils/auth.js";
@@ -6,10 +7,8 @@ import { generateOTP } from "../utils/otp.js";
 import { sendOtpToMail } from "../utils/mail.js";
 
 export const login = async (req, res) => {
-  console.log(
-    "-----------------------------Login API Called-------------------------------"
-  );
-  const { uniqueId, password } = req.body;
+  console.log("-------Login API Called-------");
+  const { uniqueId, password, remember } = req.body;
 
   try {
     connect();
@@ -24,8 +23,8 @@ export const login = async (req, res) => {
     const isPasswordMatch = await bcrypt.compare(password, isExist[0].password);
 
     if (!isPasswordMatch)
-      res.status(401).json({ message: "Invalid Username or Password!" });
-    const token = await generateAccessToken(uniqueId);
+      return res.status(401).json({ message: "Invalid Username or Password!" });
+    const token = await generateAccessToken(uniqueId, remember);
 
     isExist[0].password = undefined;
 
@@ -41,9 +40,7 @@ export const login = async (req, res) => {
 };
 
 export const register = async (req, res) => {
-  console.log(
-    "-----------------------------Register API Called-------------------------------"
-  );
+  console.log("-------Register API Called-------");
   const {
     firstName,
     lastName,
@@ -111,14 +108,16 @@ export const register = async (req, res) => {
   }
 };
 
-export const resendOTP = (req, res) => {
-  console.log(
-    "-----------------------------resendOTP API Called-------------------------------"
-  );
+export const sendOTP = async (req, res) => {
+  console.log("-------sendOTP API Called-------");
   const { email } = req.body;
   const otp = generateOTP();
 
   try {
+    await connect();
+    const isExist = await User.find({ email });
+    if (!isExist.length)
+      return res.status(400).json({ message: "Email doesn't exist!" });
     console.log("otp:", otp);
     sendOtpToMail(email, otp);
     return res
@@ -127,5 +126,31 @@ export const resendOTP = (req, res) => {
   } catch (error) {
     console.log("Resend OTP Error : ", error);
     res.status(500).json({ message: "Error while resending otp!" });
+  }
+};
+
+export const changePassword = async (req, res) => {
+  console.log("-------resendOTP API Called---------");
+  const { email, password } = req.body;
+  try {
+    await connect();
+
+    const salt = await bcrypt.genSalt(10); // 10 is salt rounds
+    const encryptedPassword = await bcrypt.hash(password, salt);
+
+    const user = await User.findOne({ email });
+
+    if (user.password === encryptedPassword)
+      return res
+        .status(400)
+        .json({ message: "New password matches previous password!" });
+
+    user.password = encryptedPassword;
+    await user.save();
+
+    res.status(200).json({ message: "Password updated successfully!" });
+  } catch (error) {
+    console.log("Change Password Error: ", error);
+    return res.status(500).json(error);
   }
 };

@@ -12,18 +12,17 @@ import LandingPage from "./components/LandingPage/LandingPage";
 import VerifyOTP from "./components/VerifyOTP/VerifyOTP";
 import Sample from "./components/SampleComp/Sample";
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route index element={<LandingPage />} />
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/home" element={<Homepage />} />
+        <Route path="/" element={<ProtectedRoute Component={Homepage} />} />
+        <Route path="/landing" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/forgot" element={<ForgotPassword />} />
         <Route path="/testing" element={<Sample />} />
         <Route path="*" element={<NotFound />} />

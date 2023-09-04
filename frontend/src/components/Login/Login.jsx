@@ -7,15 +7,17 @@ import checkbox_selected from "./images/Checkbox_Selected.png";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import toastOptions from "../../utils/toastOptions";
-
+import { useSelector, useDispatch } from "react-redux";
+import { setLogin } from "../../store/Slices/AuthSlice";
 import axios from "axios";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const [uniqueId, setUniqueId] = useState("");
   const [password, setPassword] = useState("");
-  const [isRemember, setIsRemember] = useState(false);
+  const [remember, setRemember] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (setState) => (event) => {
     setState(event.target.value);
@@ -33,9 +35,13 @@ const Login = () => {
         });
         if (response.status === 200) {
           setLoading(false);
-          toast.success("Login Successfully!");
+          toast.success("Login Successfully!", toastOptions);
+          const { user, token } = response?.data;
+          dispatch(setLogin({ user, token }));
+          setTimeout(() => {
+            navigate("/");
+          }, 1000);
         }
-        navigate("/home");
       } else {
         if (!uniqueId.trim()) {
           setLoading(false);
@@ -49,7 +55,7 @@ const Login = () => {
         }
       }
     } catch (error) {
-      if (error.response.status === 403) {
+      if (error?.response?.data?.message) {
         toast.error(error.response.data.message, toastOptions);
         setLoading(false);
         return;
@@ -98,7 +104,7 @@ const Login = () => {
               className={`d-flex justify-content-between align-items-center w-75 px-2 ${styles.forgot}`}
             >
               <p
-                onClick={() => setIsRemember(!isRemember)}
+                onClick={() => setRemember(!remember)}
                 style={{
                   cursor: "pointer",
                   display: "flex",
@@ -107,7 +113,7 @@ const Login = () => {
                 }}
               >
                 <img
-                  src={isRemember ? checkbox_selected : checkbox_unselected}
+                  src={remember ? checkbox_selected : checkbox_unselected}
                   alt="checkbox"
                   height={"15px"}
                 />{" "}

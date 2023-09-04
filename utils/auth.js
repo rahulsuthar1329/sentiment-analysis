@@ -2,8 +2,10 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-export const generateAccessToken = async (uniqueId) => {
-  return jwt.sign({ uniqueId }, process.env.JWT_SECRET, { expiresIn: "7d" });
+export const generateAccessToken = async (uniqueId, remember) => {
+  return jwt.sign({ uniqueId }, process.env.JWT_SECRET, {
+    expiresIn: remember ? "7d" : "2h",
+  });
 };
 
 export const verifyToken = (req, res, next) => {

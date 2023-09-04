@@ -5,6 +5,7 @@
   background-color: white;
   min-height: 100%;
   width: 100%;
+  position: relative;
 }
 
 .mycont {
@@ -81,6 +82,7 @@
   border: 1px solid #027e5b;
   box-sizing: border-box;
   position: relative;
+  background-color: white;
   padding: 12px 15px;
   font-size: 13px;
   color: transparent;

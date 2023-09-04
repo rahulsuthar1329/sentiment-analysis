@@ -1,30 +1,64 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import styles from "./VerifyOTP.module.css";
 import vector from "./img/vector.png";
 import logo from "./img/GenieCart_Teal.png";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import toastOptions from "../../utils/toastOptions";
+import { toast, ToastContainer } from "react-toastify";
 
-const VerifyOTP = () => {
-  const [otp, setOtp] = useState({
-    inp1: "",
-    inp2: "",
-    inp3: "",
-    inp4: "",
-    inp5: "",
-    inp6: "",
-  });
-  const [seconds, setSeconds] = useState(0);
-  const ref = useRef();
+let currentIndex = 0;
+const VerifyOTP = ({ setVerifyOTPModel, handleOnSubmit, code }) => {
+  const [grow, setGrow] = useState(true);
+  const [seconds, setSeconds] = useState(60);
+  const [otp, setOtp] = useState(new Array(6).fill(""));
+  const [activeOTPIndex, setActiveOTPIndex] = useState(0);
+
+  const inputRef = useRef();
   const navigate = useNavigate();
 
-  const location = useLocation();
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      }
+      clearInterval(interval);
+    }, 1000);
 
-  const handleOnClick = (e) => {
+    return () => {
+      clearInterval(interval);
+    };
+  }, [seconds]);
+
+  const handleOnChange = (e) => {
+    const { value } = e.target;
+    const newOTP = [...otp];
+    newOTP[currentIndex] = value.substring(value.length - 1);
+    setOtp(newOTP);
+    if (!value) {
+      setActiveOTPIndex(currentIndex - 1);
+      setGrow(false);
+    } else {
+      setActiveOTPIndex(currentIndex + 1);
+      setGrow(true);
+    }
+  };
+
+  const handleOnKeyDown = ({ key }, index) => {
+    currentIndex = index;
+    if (key === "Backspace" || (!otp[index] && !grow))
+      setActiveOTPIndex(currentIndex - 1);
+  };
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [activeOTPIndex]);
+
+  const handleOnClick = async (e) => {
     e.preventDefault();
-    const combinedOTP =
-      otp.inp1 + otp.inp2 + otp.inp3 + otp.inp4 + otp.inp5 + otp.inp6;
-    if (combinedOTP === location.state.otp) return navigate("/home");
+    const combinedOTP = otp.join("");
+    if (combinedOTP === code) {
+      return handleOnSubmit();
+    }
   };
 
   return (
@@ -45,58 +79,29 @@ const VerifyOTP = () => {
             <h3 className={styles.heading}>Verify your email</h3>
             <p>Please Enter the One Time Password (OTP) sent to your email</p>
             <div className={styles.code}>
-              <input
-                type="text"
-                name="inp1"
-                value={otp.inp1}
-                className={styles.input}
-                onChange={(e) => setOtp({ ...otp, inp1: e.target.value })}
-                maxLength={1}
-              />
-              <input
-                type="text"
-                name="inp2"
-                value={otp.inp2}
-                className={styles.input}
-                onChange={(e) => setOtp({ ...otp, inp2: e.target.value })}
-                maxLength={1}
-              />
-              <input
-                type="text"
-                name="inp3"
-                value={otp.inp3}
-                className={styles.input}
-                onChange={(e) => setOtp({ ...otp, inp3: e.target.value })}
-                maxLength={1}
-              />
-              <input
-                type="text"
-                name="inp4"
-                value={otp.inp4}
-                className={styles.input}
-                onChange={(e) => setOtp({ ...otp, inp4: e.target.value })}
-                maxLength={1}
-              />
-              <input
-                type="text"
-                name="inp5"
-                value={otp.inp5}
-                className={styles.input}
-                onChange={(e) => setOtp({ ...otp, inp5: e.target.value })}
-                maxLength={1}
-              />
-              <input
-                type="text"
-                name="inp6"
-                value={otp.inp6}
-                className={styles.input}
-                onChange={(e) => setOtp({ ...otp, inp6: e.target.value })}
-                maxLength={1}
-              />
+              {otp.map((_, index) => {
+                return (
+                  <input
+                    key={index}
+                    ref={index === activeOTPIndex ? inputRef : null}
+                    type="number"
+                    name="input"
+                    value={otp[index]}
+                    className={styles.input}
+                    onChange={handleOnChange}
+                    onFocus={(event) => event.target.select()}
+                    onKeyDown={(e) => handleOnKeyDown(e, index)}
+                    maxLength={1}
+                  />
+                );
+              })}
             </div>
             <p>
-              Resend OTP in {seconds < 10 ? "0" + seconds : seconds} sec.{" "}
-              {!seconds && <span>Resend OTP</span>}
+              {seconds ? (
+                `Resend OTP in 00: ${seconds < 10 ? "0" + seconds : seconds} `
+              ) : (
+                <span>Resend OTP</span>
+              )}
             </p>
             <div
               style={{
@@ -106,15 +111,19 @@ const VerifyOTP = () => {
               }}
             >
               <button className={styles.submit} onClick={handleOnClick}>
-                Verify
+                Submit
               </button>
             </div>
-            <p className={styles.goback} onClick={() => navigate(-1)}>
+            <p
+              className={styles.goback}
+              onClick={() => setVerifyOTPModel(false)}
+            >
               Change your Credentials
             </p>
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

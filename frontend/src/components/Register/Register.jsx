@@ -16,6 +16,7 @@ import {
   isMobileValid,
   isUsernameValid,
 } from "../../utils/validation";
+import VerifyOTP from "../VerifyOTP/VerifyOTP";
 
 const Register = () => {
   const [loading, setLoading] = useState(false);
@@ -28,6 +29,10 @@ const Register = () => {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [password, setPassword] = useState("");
   const [isSelected, setIsSelected] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [verifyOTPModel, setVerifyOTPModel] = useState(false);
+  let formData = new FormData();
+
   const navigate = useNavigate();
 
   const handleChange = (setState) => (event) => {
@@ -51,23 +56,40 @@ const Register = () => {
         gender &&
         isSelected
       ) {
+        formData.append("firstName", firstName);
+        formData.append("lastName", lastName);
+        formData.append("username", username);
+        formData.append("mobile", mobile);
+        formData.append("gender", gender);
+        formData.append("email", email);
+        formData.append("dateOfBirth", dateOfBirth);
+        formData.append("password", password);
+        // const response = await axios.post(
+        //   "http://localhost:5001/auth/register",
+        //   {
+        //     firstName,
+        //     lastName,
+        //     username,
+        //     password,
+        //     email,
+        //     mobile,
+        //     dateOfBirth,
+        //     gender,
+        //   }
+        // );
         const response = await axios.post(
-          "http://localhost:5001/auth/register",
-          {
-            firstName,
-            lastName,
-            username,
-            password,
-            email,
-            mobile,
-            dateOfBirth,
-            gender,
-          }
+          "http://localhost:5001/auth/send_otp",
+          { email }
         );
-        if (response.status === 201) {
+        if (response.data.otp) {
           setLoading(false);
-          toast.success("Register Successfully!", toastOptions);
-          setTimeout(() => navigate("/login"), 2000);
+          setOtp(response.data.otp);
+          toast.success(
+            "Congratulations! You are now a part of GenieCart Family.",
+            toastOptions
+          );
+          setVerifyOTPModel(true);
+          // setTimeout(() => navigate("/login"), 2000);
           return;
         }
       } else {
@@ -103,14 +125,22 @@ const Register = () => {
         setLoading(false);
       }
     } catch (error) {
-      if (error.response.status === 403) {
+      if (error.response?.status === 400) {
         toast.error(error.response.data.message, toastOptions);
         setLoading(false);
         return;
       }
       toast.error("Internal Server Error!", toastOptions);
+      console.log("Register Error : ", error);
       setLoading(false);
-      console.log("Error: ", error);
+      // if (error.response.status === 403) {
+      //   toast.error(error.response.data.message, toastOptions);
+      //   setLoading(false);
+      //   return;
+      // }
+      // toast.error("Internal Server Error!", toastOptions);
+      // setLoading(false);
+      // console.log("Error: ", error);
     }
   };
 
@@ -271,6 +301,7 @@ const Register = () => {
               <p>
                 I agree with <span>terms and conditions.</span>
               </p>
+              <div></div>
             </div>
 
             <button className={styles.submit}>
@@ -290,6 +321,15 @@ const Register = () => {
           </button>
         </div>
       </div>
+
+      {verifyOTPModel && (
+        <VerifyOTP
+          setVerifyOTPModel={setVerifyOTPModel}
+          formData={formData}
+          code={otp}
+        />
+      )}
+
       <ToastContainer />
     </div>
   );
