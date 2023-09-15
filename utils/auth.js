@@ -11,7 +11,7 @@ export const generateAccessToken = async (uniqueId, remember) => {
 export const verifyToken = (req, res, next) => {
   try {
     let token = req.headers["authorization"];
-    if (!token) return res.status(403).send("Access Denied.");
+    if (!token) return res.status(401).send("Access Denied.");
     if (token.startsWith("Bearer ")) {
       token = token.slice(7, token.length).trimLeft();
     }

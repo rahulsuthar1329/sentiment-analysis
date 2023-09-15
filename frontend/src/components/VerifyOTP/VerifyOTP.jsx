@@ -4,10 +4,11 @@ import vector from "./img/vector.png";
 import logo from "./img/GenieCart_Teal.png";
 import { useNavigate } from "react-router-dom";
 import toastOptions from "../../utils/toastOptions";
+import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 
 let currentIndex = 0;
-const VerifyOTP = ({ setVerifyOTPModel, handleOnSubmit, code }) => {
+const VerifyOTP = ({ setVerifyOTPModel, formData }) => {
   const [grow, setGrow] = useState(true);
   const [seconds, setSeconds] = useState(60);
   const [otp, setOtp] = useState(new Array(6).fill(""));
@@ -56,8 +57,38 @@ const VerifyOTP = ({ setVerifyOTPModel, handleOnSubmit, code }) => {
   const handleOnClick = async (e) => {
     e.preventDefault();
     const combinedOTP = otp.join("");
-    if (combinedOTP === code) {
-      return handleOnSubmit();
+    try {
+      const firstName = formData.get("firstName");
+      const lastName = formData.get("lastName");
+      const username = formData.get("username");
+      const email = formData.get("email");
+      const password = formData.get("password");
+      const dateOfBirth = formData.get("dateOfBirth");
+      const gender = formData.get("gender");
+      const mobile = formData.get("mobile");
+      const response = await axios.post("http://localhost:5001/auth/register", {
+        firstName,
+        lastName,
+        username,
+        email,
+        password,
+        dateOfBirth,
+        gender,
+        mobile,
+        combinedOTP,
+      });
+      if (response.data) {
+        toast.success(
+          "Congratulations! You are now a part of GenieCart Family.",
+          toastOptions
+        );
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error!");
     }
   };
 

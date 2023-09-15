@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import Verification from "./../models/Verify";
+import Verification from "../models/Verify.js";
 import { connect } from "../config/db.js";
 import bcrypt from "bcrypt";
 import { generateAccessToken } from "../utils/auth.js";
@@ -23,7 +23,7 @@ export const login = async (req, res) => {
     const isPasswordMatch = await bcrypt.compare(password, isExist[0].password);
 
     if (!isPasswordMatch)
-      return res.status(401).json({ message: "Invalid Username or Password!" });
+      return res.status(403).json({ message: "Invalid Username or Password!" });
     const token = await generateAccessToken(uniqueId, remember);
 
     isExist[0].password = undefined;
@@ -50,17 +50,65 @@ export const register = async (req, res) => {
     dateOfBirth,
     gender,
     mobile,
+    combinedOTP,
   } = req.body;
 
   try {
     await connect();
     // check if email or username already exists
+    const isExist = await Verification.findOne({ email });
+    if (!isExist || isExist.otp !== combinedOTP)
+      return res.status(400).json({ message: "OTP doesn't match!" });
+
+    // Encrypt password
+    const salt = await bcrypt.genSalt(10); // 10 is salt rounds
+    const encryptedPassword = await bcrypt.hash(password, salt);
+
+    // store user details in database
+    const response = await User.create({
+      firstName,
+      lastName,
+      username,
+      email,
+      password: encryptedPassword,
+      dateOfBirth,
+      mobile,
+      gender,
+    });
+    return res.status(201).json({ message: "User Registered Successfully." });
+  } catch (error) {
+    console.log("Register Error: ", error);
+    return res.status(500).json(error);
+  }
+};
+
+export const verfiyOTP = async (req, res) => {
+  console.log("-------sendAuthOTP API Called-------");
+  const { email, otp } = req.body;
+  try {
+    await connect();
+    const isExist = await Verification.findOne({ email });
+    if (isExist && isExist.otp === otp) {
+      return res.status(200).json({ message: "OTP verified successfully." });
+    } else {
+      return res.status(400).json({ message: "OTP doesn't match!" });
+    }
+  } catch (error) {
+    console.log("Verify OTP Error : ", error);
+    return res.status(500).json({ message: "Internal Server Error!", error });
+  }
+};
+
+export const sendAuthOTP = async (req, res) => {
+  console.log("-------sendAuthOTP API Called-------");
+  const { email, username } = req.body;
+  const otp = generateOTP();
+
+  try {
+    await connect();
     const isExist = await User.find({
       $or: [{ username }, { email }],
     });
-
-    console.log(isExist[0]);
-
     if (isExist.length) {
       // check what field already exist email or username or both
       if (
@@ -81,30 +129,28 @@ export const register = async (req, res) => {
           .status(403)
           .json({ message: "Unknown Error! Check backend Console..." });
     }
+    console.log("otp:", otp);
 
-    // Encrypt password
-    const salt = await bcrypt.genSalt(10); // 10 is salt rounds
-    const encryptedPassword = await bcrypt.hash(password, salt);
+    const otpExist = await Verification.findOne({ email });
+    if (otpExist) {
+      otpExist.otp = otp;
+      await otpExist.save();
+      sendOtpToMail(email, otp);
+      return res
+        .status(200)
+        .json({ message: "OTP sent to your email successfully!" });
+    }
 
-    // store user details in database
-    const response = await User.create({
-      firstName,
-      lastName,
-      username,
-      email,
-      password: encryptedPassword,
-      dateOfBirth,
-      mobile,
-      gender,
-    });
-    const otp = generateOTP();
+    // const response = await Verification.create({ email, otp });
+    // console.log("OTP reponse : ", response);
+    const response = await Verification.create({ email, otp });
     sendOtpToMail(email, otp);
     return res
-      .status(201)
-      .json({ message: "User Registered Successfully...", otp });
+      .status(200)
+      .json({ message: "OTP sent to your email successfully!" });
   } catch (error) {
-    console.log("Register Error: ", error);
-    return res.status(500).json(error);
+    console.log("Resend OTP Error : ", error);
+    res.status(500).json({ message: "Error while resending otp!" });
   }
 };
 

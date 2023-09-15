@@ -29,21 +29,20 @@ const Register = () => {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [password, setPassword] = useState("");
   const [isSelected, setIsSelected] = useState(false);
-  const [otp, setOtp] = useState("");
   const [verifyOTPModel, setVerifyOTPModel] = useState(false);
+  const [form, setForm] = useState(null);
+
   let formData = new FormData();
 
   const navigate = useNavigate();
 
   const handleChange = (setState) => (event) => {
     setState(event.target.value);
-    console.log(event.target.name, event.target.value);
   };
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       if (
         firstName.trim().length >= 3 &&
@@ -64,30 +63,16 @@ const Register = () => {
         formData.append("email", email);
         formData.append("dateOfBirth", dateOfBirth);
         formData.append("password", password);
-        // const response = await axios.post(
-        //   "http://localhost:5001/auth/register",
-        //   {
-        //     firstName,
-        //     lastName,
-        //     username,
-        //     password,
-        //     email,
-        //     mobile,
-        //     dateOfBirth,
-        //     gender,
-        //   }
-        // );
+
+        setForm(formData);
+
         const response = await axios.post(
-          "http://localhost:5001/auth/send_otp",
-          { email }
+          "http://localhost:5001/auth/send_auth_otp",
+          { email: email.trim(), username: username.trim() }
         );
-        if (response.data.otp) {
+        if (response.data) {
           setLoading(false);
-          setOtp(response.data.otp);
-          toast.success(
-            "Congratulations! You are now a part of GenieCart Family.",
-            toastOptions
-          );
+          toast.success("OTP has been sent to your mail successfully.");
           setVerifyOTPModel(true);
           // setTimeout(() => navigate("/login"), 2000);
           return;
@@ -125,7 +110,7 @@ const Register = () => {
         setLoading(false);
       }
     } catch (error) {
-      if (error.response?.status === 400) {
+      if (error.response?.status === 403) {
         toast.error(error.response.data.message, toastOptions);
         setLoading(false);
         return;
@@ -133,14 +118,6 @@ const Register = () => {
       toast.error("Internal Server Error!", toastOptions);
       console.log("Register Error : ", error);
       setLoading(false);
-      // if (error.response.status === 403) {
-      //   toast.error(error.response.data.message, toastOptions);
-      //   setLoading(false);
-      //   return;
-      // }
-      // toast.error("Internal Server Error!", toastOptions);
-      // setLoading(false);
-      // console.log("Error: ", error);
     }
   };
 
@@ -323,11 +300,7 @@ const Register = () => {
       </div>
 
       {verifyOTPModel && (
-        <VerifyOTP
-          setVerifyOTPModel={setVerifyOTPModel}
-          formData={formData}
-          code={otp}
-        />
+        <VerifyOTP setVerifyOTPModel={setVerifyOTPModel} formData={form} />
       )}
 
       <ToastContainer />
