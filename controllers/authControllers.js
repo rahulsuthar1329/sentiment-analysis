@@ -165,10 +165,22 @@ export const sendOTP = async (req, res) => {
     if (!isExist.length)
       return res.status(400).json({ message: "Email doesn't exist!" });
     console.log("otp:", otp);
+
+    const otpExist = await Verification.findOne({ email });
+    if (otpExist) {
+      otpExist.otp = otp;
+      await otpExist.save();
+      sendOtpToMail(email, otp);
+      return res
+        .status(200)
+        .json({ message: "OTP sent to your email successfully!" });
+    }
+
+    const response = await Verification.create({ email, otp });
     sendOtpToMail(email, otp);
     return res
       .status(200)
-      .json({ message: "OTP sent to your email successfully!", otp });
+      .json({ message: "OTP sent to your email successfully!" });
   } catch (error) {
     console.log("Resend OTP Error : ", error);
     res.status(500).json({ message: "Error while resending otp!" });

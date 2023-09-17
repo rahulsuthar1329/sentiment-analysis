@@ -7,7 +7,7 @@ import checkbox_selected from "./images/Checkbox_Selected.png";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import toastOptions from "../../utils/toastOptions";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setLogin } from "../../store/Slices/AuthSlice";
 import axios from "axios";
 

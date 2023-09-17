@@ -16,8 +16,6 @@ const ForgotPassword = () => {
   const [password, setPassword] = useState("");
   const [cnfpassword, setCnfpassword] = useState("");
 
-  const location = useLocation();
-
   // react curring
   const handleChange = (setState) => (event) => {
     return setState(event.target.value);
@@ -32,10 +30,13 @@ const ForgotPassword = () => {
         return toast.error("Please enter confirm password.", toastOptions);
       if (!isPasswordValid(password))
         return toast.error("Invalid Password!", toastOptions);
-      if (otpReceived.otp !== otp)
-        return toast.error("OTP doesn't match.", toastOptions);
       if (password !== cnfpassword)
         return toast.error("Password and Confirm Password doesn't match.");
+
+      const verifyOTP = await axios.post(
+        "http://localhost:5001/auth/verify_otp",
+        { email: email.trim(), otp }
+      );
 
       const response = await axios.post(
         "http://localhost:5001/auth/update_password",
@@ -43,11 +44,16 @@ const ForgotPassword = () => {
       );
 
       if (response.data) {
-        navigate("/login");
-        return toast.success(response.data.message, toastOptions);
+        toast.success(response.data.message, toastOptions);
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
       }
     } catch (error) {
       console.log(error);
+      if (error.response?.data?.message)
+        return toast.error(error.response.data.message, toastOptions);
+
       toast.error(error.message, toastOptions);
     }
   };
@@ -61,14 +67,13 @@ const ForgotPassword = () => {
         return toast.error("Invalid Email!", toastOptions);
 
       // api for getting otp from backend
-      const response = await axios.post(
-        "http://localhost:5001/auth/resend_otp",
-        { email: email.trim() }
-      );
+      const response = await axios.post("http://localhost:5001/auth/send_otp", {
+        email: email.trim(),
+      });
 
-      if (response) {
+      if (response.data) {
         console.log(response.data);
-        setOtpReceived(response.data);
+        setOtpReceived(true);
         toast.success(response.data?.message, toastOptions);
       }
     } catch (error) {
