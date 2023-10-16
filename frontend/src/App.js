@@ -1,5 +1,4 @@
 import "./App.css";
-import Navbar from "./components/Navbar/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -9,7 +8,6 @@ import Register from "./components/Register/Register";
 import Profile from "./components/Profile/profile";
 import NotFound from "./components/NotFound/NotFound";
 import LandingPage from "./components/LandingPage/LandingPage";
-import VerifyOTP from "./components/VerifyOTP/VerifyOTP";
 import Sample from "./components/SampleComp/Sample";
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";

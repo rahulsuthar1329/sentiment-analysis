@@ -82,6 +82,39 @@ export const register = async (req, res) => {
   }
 };
 
+export const registerWithGoogle = async (req, res) => {
+  console.log("-------Register API Called-------");
+  const { name, email, picture } = req.body;
+
+  try {
+    await connect();
+    // check if email or username already exists
+    const isExist = await Verification.findOne({ email });
+    if (!isExist || isExist.otp !== combinedOTP)
+      return res.status(400).json({ message: "OTP doesn't match!" });
+
+    // Encrypt password
+    const salt = await bcrypt.genSalt(10); // 10 is salt rounds
+    const encryptedPassword = await bcrypt.hash(password, salt);
+
+    // store user details in database
+    const response = await User.create({
+      firstName,
+      lastName,
+      username,
+      email,
+      password: encryptedPassword,
+      dateOfBirth,
+      mobile,
+      gender,
+    });
+    return res.status(201).json({ message: "User Registered Successfully." });
+  } catch (error) {
+    console.log("Register Error: ", error);
+    return res.status(500).json(error);
+  }
+};
+
 export const verfiyOTP = async (req, res) => {
   console.log("-------sendAuthOTP API Called-------");
   const { email, otp } = req.body;
@@ -169,7 +202,8 @@ export const sendOTP = async (req, res) => {
     const otpExist = await Verification.findOne({ email });
     if (otpExist) {
       otpExist.otp = otp;
-      await otpExist.save();
+      const resp = await otpExist.save();
+      console.log("resp: ", resp);
       sendOtpToMail(email, otp);
       return res
         .status(200)

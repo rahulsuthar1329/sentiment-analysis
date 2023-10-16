@@ -27,6 +27,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
+  const [dateType, setDateType] = useState(false);
   const [password, setPassword] = useState("");
   const [isSelected, setIsSelected] = useState(false);
   const [verifyOTPModel, setVerifyOTPModel] = useState(false);
@@ -37,6 +38,10 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleChange = (setState) => (event) => {
+    if (event.target.name === "dob") {
+      setState(event.target.value.split("-").reverse().join("-"));
+      return;
+    }
     setState(event.target.value);
   };
 
@@ -188,9 +193,14 @@ const Register = () => {
             />
 
             <input
-              type="date"
+              type={dateType ? "date" : "text"}
+              placeholder="Date of Birth"
               className={styles.datepicker}
+              name="dob"
               id="datepicker"
+              value={dateOfBirth}
+              onMouseOver={() => setDateType(true)}
+              onMouseLeave={() => setDateType(false)}
               onChange={handleChange(setDateOfBirth)}
             />
 

@@ -85,18 +85,17 @@
   background-color: white;
   padding: 12px 15px;
   font-size: 13px;
-  color: transparent;
   border-radius: 5px;
   width: 75%;
 }
 
-.datepicker::before {
+/* .datepicker::before {
   content: "Date of Birth";
   color: gray;
   position: absolute;
   background-color: white;
   padding: 5px 10px 5px 0;
-}
+} */
 
 .datepicker::-webkit-calendar-picker-indicator {
   background: transparent;

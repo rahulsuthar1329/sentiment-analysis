@@ -5,19 +5,52 @@ import google from "./images/Google_Logo.png";
 import checkbox_unselected from "./images/Checkbox_Unselected.png";
 import checkbox_selected from "./images/Checkbox_Selected.png";
 import { useNavigate } from "react-router-dom";
+import { useGoogleLogin, useGoogleOneTapLogin } from "@react-oauth/google";
 import { ToastContainer, toast } from "react-toastify";
 import toastOptions from "../../utils/toastOptions";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../store/Slices/AuthSlice";
+import jwt_decode from "jwt-decode";
 import axios from "axios";
+import GenieToast from "./../GenieToast/GenieToast";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const [uniqueId, setUniqueId] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
+  const [genieToast, setGenieToast] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // Google Sign In
+  // const authOnSuccess = async (response) => {
+  //   console.log(response);
+  //   try {
+  //     // const res = await axios.get(
+  //     //   "https://www.googleapis.com/oauth2/v3/userinfo",
+  //     //   {
+  //     //     headers: {
+  //     //       Authorization: `Bearer ${response.access_token}`,
+  //     //     },
+  //     //   }
+  //     // );
+  //     const res = jwt_decode(response?.credential);
+  //     console.log(res);
+  //   } catch (error) {
+  //     console.log("google signin error : ", error);
+  //   }
+  // };
+
+  // const authOnError = (err) => {
+  //   console.log("Google Login Error!", err);
+  // };
+
+  // const login = useGoogleOneTapLogin({
+  //   onSuccess: authOnSuccess,
+  //   onError: authOnError,
+  // });
 
   const handleChange = (setState) => (event) => {
     setState(event.target.value);
@@ -73,8 +106,7 @@ const Login = () => {
           <img
             src={vector}
             alt=""
-            width="100%"
-            height="100%"
+            style={{ aspectRatio: 1, height: "80vh", width: "auto" }}
             className={styles.vector}
           />
         </div>
@@ -115,7 +147,7 @@ const Login = () => {
                 <img
                   src={remember ? checkbox_selected : checkbox_unselected}
                   alt="checkbox"
-                  height={"15px"}
+                  style={{ height: "15px", width: "auto", aspectRatio: 1 }}
                 />{" "}
                 <span>Remember Me</span>
               </p>
@@ -137,13 +169,23 @@ const Login = () => {
           <button
             className={`${styles.submit} d-flex justify-content-between align-items-center`}
           >
-            <img src={google} alt="google icon" height={"23px"} />{" "}
+            <img
+              src={google}
+              alt="google icon"
+              style={{ height: "auto", width: "23px", aspectRatio: 1 }}
+            />{" "}
             <p>Login with Google</p>
             <div></div>
           </button>
         </div>
       </div>
       <ToastContainer />
+      {genieToast ? (
+        <GenieToast
+          message={"User logged in successfully."}
+          setToast={setGenieToast}
+        />
+      ) : null}
     </div>
   );
 };
