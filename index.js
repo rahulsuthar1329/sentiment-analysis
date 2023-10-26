@@ -15,6 +15,11 @@ app.use(cors());
 // Routes
 app.use("/auth", userRoutes);
 
+// sample api
+app.get("/", (req, res) => {
+  res.send("Welcome to GenieCart!");
+});
+
 app.listen(port, (err) => {
   if (err) console.log(err);
   else console.log(`Listening at port ${port}`);
