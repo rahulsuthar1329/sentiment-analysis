@@ -8,9 +8,7 @@ const port = process.env.PORT || 3003;
 const app = express();
 
 const corsOptions = {
-  origin: [
-    "https://sentiment-analysis-frontend-kw18zovap-rahulsuthar1329.vercel.app",
-  ],
+  origin: ["https://sentiment-analysis-frontend-taupe.vercel.app/"],
 };
 
 // Middlewares
