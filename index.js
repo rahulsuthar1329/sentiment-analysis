@@ -9,6 +9,8 @@ const app = express();
 
 const corsOptions = {
   origin: ["https://sentiment-analysis-frontend-taupe.vercel.app/"],
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
 };
 
 // Middlewares
