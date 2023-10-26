@@ -3,7 +3,7 @@ import {
   login,
   register,
   sendOTP,
-  verfiyOTP,
+  verifyOTP,
   sendAuthOTP,
   changePassword,
   registerWithGoogle,
@@ -14,7 +14,7 @@ const router = Router();
 router.post("/login", login);
 router.post("/register", register);
 router.post("/register_google", registerWithGoogle);
-router.post("/verify_otp", verfiyOTP);
+router.post("/verify_otp", verifyOTP);
 router.post("/send_otp", sendOTP);
 router.post("/send_auth_otp", sendAuthOTP);
 router.post("/update_password", changePassword);

@@ -14,7 +14,7 @@ export const login = async (req, res) => {
     connect();
 
     const isExist = await User.find({
-      $or: [{ username: uniqueId }, { email: uniqueId }],
+      $or: [{ username: uniqueId }, { email: uniqueId.toLowerCase() }],
     });
 
     if (!isExist.length)
@@ -115,7 +115,7 @@ export const registerWithGoogle = async (req, res) => {
   }
 };
 
-export const verfiyOTP = async (req, res) => {
+export const verifyOTP = async (req, res) => {
   console.log("-------sendAuthOTP API Called-------");
   const { email, otp } = req.body;
   try {

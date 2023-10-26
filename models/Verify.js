@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import { Schema, model } from "mongoose";
 
-const otpSchema = new mongoose.Schema(
+const otpSchema = new Schema(
   {
     email: {
       type: String,
@@ -15,6 +15,6 @@ const otpSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Verification = mongoose.model("Verfication", otpSchema); // collection created
+const Verification = model("Verfication", otpSchema); // collection created
 
 export default Verification;

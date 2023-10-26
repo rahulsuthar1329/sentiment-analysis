@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const port = process.env.PORT || 3003;
-// const port = 3003;
 const app = express();
 
 // Middlewares
