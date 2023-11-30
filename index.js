@@ -8,7 +8,10 @@ const port = process.env.PORT || 3003;
 const app = express();
 
 const corsOptions = {
-  origin: "https://sentiment-analysis-frontend-taupe.vercel.app",
+  origin: [
+    "https://sentiment-analysis-frontend-taupe.vercel.app",
+    "http://localhost:3000",
+  ],
   "Access-Control-Allow-Credentials": true,
   credentials: true, //access-control-allow-credentials:true
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
