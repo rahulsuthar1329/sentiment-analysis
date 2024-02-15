@@ -246,3 +246,8 @@ export const changePassword = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+
+export const authTest = async (req, res) => {
+  // Hello
+  return res.status(200).json({ message: "Authorized" });
+};
