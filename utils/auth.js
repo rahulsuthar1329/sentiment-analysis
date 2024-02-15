@@ -20,6 +20,6 @@ export const verifyToken = (req, res, next) => {
     console.log(verified);
     next();
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(401).json({ message: err.message });
   }
 };
