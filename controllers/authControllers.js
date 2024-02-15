@@ -248,6 +248,5 @@ export const changePassword = async (req, res) => {
 };
 
 export const authTest = async (req, res) => {
-  // Hello
   return res.status(200).json({ message: "Authorized" });
 };
