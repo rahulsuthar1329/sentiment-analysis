@@ -19,21 +19,9 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Define the paths to your 'views' and 'images' directories
 const viewsDir = path.join(__dirname, "../views/sample.hbs");
-// const vector = path.join(__dirname, "../static/vector.png");
-// const logo = path.join(__dirname, "../static/logo.png");
 
-// Read the Handlebars template file
 const templateContent = fs.readFileSync(viewsDir, "utf8");
-
-// // Read the image file synchronously and encode it to Base64
-// const vectorPath = path.resolve(vector, "vector.png");
-// const vectorBase64 = fs.readFileSync(vector);
-
-// // Read the image file synchronously and encode it to Base64
-// const logoPath = path.resolve(logo, "logo.png");
-// const logoBase64 = fs.readFileSync(logo);
 
 const compiledTemplate = handlebars.compile(templateContent);
 
