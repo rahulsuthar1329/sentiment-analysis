@@ -4,7 +4,7 @@ import Message from "../models/Message.js";
 import { connect } from "../config/db.js";
 import shuffle from "../utils/shuffle.js";
 import messages from "../sampleData/messages.js";
-import images from "../sampleData/ChatCollection.js";
+import names from "../sampleData/chatNames.js";
 
 // TODO:
 // only admin can make admin or remove admin
@@ -26,7 +26,7 @@ export const getChat = async (req, res) => {
     connect();
     const { chatId } = req.params;
     const chat = await Chat.findOne({ _id: chatId });
-    return res.status(200).json({ chat });
+    return res.status(200).json(chat);
   } catch (error) {
     console.log("GetChatException: ", error.message);
     return res.status(500).json({ message: error.message });
@@ -55,7 +55,7 @@ export const generateRandomChats = async (req, res) => {
       isActive: true,
     });
 
-    return res.status(200).json({ chat });
+    return res.status(200).json(chat);
   } catch (error) {
     console.log("GenerateRandomChatException: ", error.message);
     return res.status(500).json({ message: error.message });
@@ -116,12 +116,11 @@ export const generateRandomMessage = async (req, res) => {
 export const setRandomLatestMessage = async (req, res) => {
   try {
     connect();
-
     const chats = await Chat.find();
     let i = 0;
     chats.forEach(async (element) => {
       const cht = await Chat.findOneAndUpdate(element._id, {
-        profileImage: images[i++].profilePictureUrl,
+        chatName: names[i++],
       });
     });
 
@@ -137,7 +136,7 @@ export const getMessages = async (req, res) => {
     connect();
     const { chatId } = req.params;
     const messages = await Message.find({ chatId });
-    return res.status(200).json({ messages });
+    return res.status(200).json(messages);
   } catch (error) {
     console.log("GetMessagesException: ", error.message);
     return res.status(500).json({ message: error.message });
@@ -205,11 +204,12 @@ export const activateChat = async (req, res) => {
 export const deleteChat = async (req, res) => {
   try {
     connect();
-    const { chatId } = req.body;
+    const { chatId } = req.params;
 
     await Chat.findByIdAndDelete(chatId);
     await Message.deleteMany({ chatId });
 
+    // return res.status(200).json({ message: "Chat has been vanished." });
     return res.status(200).json({ message: "Chat has been vanished." });
   } catch (error) {
     console.log("DeleteChatException: ", error.message);
