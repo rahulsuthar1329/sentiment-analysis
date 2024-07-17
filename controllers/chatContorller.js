@@ -135,7 +135,8 @@ export const getMessages = async (req, res) => {
   try {
     connect();
     const { chatId } = req.params;
-    const messages = await Message.find({ chatId });
+    const messages = (await Message.find({ chatId })).reverse();
+    console.log({ messages });
     return res.status(200).json(messages);
   } catch (error) {
     console.log("GetMessagesException: ", error.message);
@@ -209,8 +210,32 @@ export const deleteChat = async (req, res) => {
     await Chat.findByIdAndDelete(chatId);
     await Message.deleteMany({ chatId });
 
-    // return res.status(200).json({ message: "Chat has been vanished." });
     return res.status(200).json({ message: "Chat has been vanished." });
+  } catch (error) {
+    console.log("DeleteChatException: ", error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const deleteChatWithWord = async (req, res) => {
+  try {
+    connect();
+    const word = req.query.word;
+
+    if (!word) {
+      return res
+        .status(400)
+        .json({ message: "Word query parameter is required." });
+    }
+    const regex = new RegExp(word, "i");
+    const chatsToDelete = await Chat.find({ chatName: regex });
+    const chatIdsToDelete = chatsToDelete.map((chat) => chat._id);
+
+    await Chat.deleteMany({ chatName: regex });
+
+    await Message.deleteMany({ chatId: { $in: chatIdsToDelete } });
+
+    return res.status(200).json({ message: "Chats have been vanished." });
   } catch (error) {
     console.log("DeleteChatException: ", error.message);
     return res.status(500).json({ message: error.message });
