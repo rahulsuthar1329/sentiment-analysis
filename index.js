@@ -33,6 +33,17 @@ const corsOptions = {
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors(corsOptions));
+app.use(cors({ origin: "*" }));
+
+function handleControllerError(err, req, res, next) {
+  console.log("ERROR : ", err.message);
+  console.error("stacked error: ", err.stack); // Log the error stack for debugging
+
+  // Craft a user-friendly error response:
+  res.status(err.statusCode || 500).json({
+    message: "An error occurred.", // Customize based on your needs
+  });
+}
 
 app.use("/auth", userRoutes);
 app.use("/chat", chatRoutes);
