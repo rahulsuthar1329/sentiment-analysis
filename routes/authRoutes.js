@@ -3,12 +3,10 @@ import {
   login,
   sendOTP,
   register,
-  authTest,
   verifyOTP,
   sendAuthOTP,
   changePassword,
   registerWithGoogle,
-  check,
 } from "../controllers/authControllers.js";
 import { verifyToken } from "../utils/auth.js";
 const router = Router();
@@ -21,8 +19,6 @@ router.post("/verify_otp", verifyOTP);
 router.post("/send_otp", sendOTP);
 router.post("/send_auth_otp", sendAuthOTP);
 router.post("/update_password", changePassword);
-router.get("/auth_test", verifyToken, authTest);
-router.get("/check", check);
 // router.post("/refresh_token", verifyToken, sendRefreshToken);
 // router.post("/logout", verifyToken, logout);
 
