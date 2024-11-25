@@ -16,6 +16,8 @@ const handleSocketConnection = (socket, io) => {
     };
   });
 
+  socket.on("newMessage", (message) => {});
+
   socket.on("disconnect", () => {
     console.log("Client disconnected");
   });
