@@ -3,7 +3,6 @@ import {
   login,
   sendOTP,
   register,
-  authTest,
   verifyOTP,
   sendAuthOTP,
   changePassword,
@@ -20,7 +19,6 @@ router.post("/verify_otp", verifyOTP);
 router.post("/send_otp", sendOTP);
 router.post("/send_auth_otp", sendAuthOTP);
 router.post("/update_password", changePassword);
-router.get("/auth_test", verifyToken, authTest);
 // router.post("/refresh_token", verifyToken, sendRefreshToken);
 // router.post("/logout", verifyToken, logout);
 
