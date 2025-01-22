@@ -28,7 +28,7 @@ class SocketService {
     io.on("connection", (socket) => {
       console.log(`New Socket Connected`, socket.id);
       socket.on("newMessage", async ({ message }) => {
-        console.log("New Message Rec.", message, pub);
+        console.log("New Message Rec.", message);
         await pub.publish("MESSAGES", JSON.stringify({ message }));
       });
     });
