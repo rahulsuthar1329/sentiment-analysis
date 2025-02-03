@@ -15,9 +15,10 @@ const server = http.createServer(app);
 
 const corsOptions = {
   origin: [
-    "https://sentiment-analysis-frontend-taupe.vercel.app",
-    "http://localhost:3000",
-    "http://192.168.66.73:8081",
+    // "https://sentiment-analysis-frontend-taupe.vercel.app",
+    // "http://localhost:3000",
+    // "http://192.168.66.73:8081",
+    "*",
   ],
   "Access-Control-Allow-Credentials": true,
   credentials: true, //access-control-allow-credentials:true
@@ -36,7 +37,7 @@ socketService.io.attach(server);
 socketService.initListeners();
 
 app.get("/", (_, res) => {
-  res.send("Welcome to GenieCart!");
+  res.send("<h1>Welcome to GenieCart!</h1>");
 });
 
 server.listen(port, (err) => {
